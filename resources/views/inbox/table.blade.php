@@ -52,7 +52,7 @@
 
 {{-- menu title --}}
 @section('menu_title')
-    <li class="breadcrumb-item"><a href="#">Table User</a></li>
+    <li class="breadcrumb-item"><a href="#">Table </a></li>
 @endsection
 {{-- end menu title --}}
 
