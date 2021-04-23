@@ -1,6 +1,7 @@
 @extends('admin_template')
 @php
-     $localhost = "http://acak.web.id/";
+     $localhost = str_replace(":8000","","http://".$_SERVER['HTTP_HOST']."/acak/");
+    
      $now =  Date('Y-m-d H:i:s');
      function getTime($date1){
       $open_date = $date1;
@@ -52,7 +53,7 @@
 
 {{-- menu title --}}
 @section('menu_title')
-    <li class="breadcrumb-item"><a href="#">Table </a></li>
+    <li class="breadcrumb-item"><a href="#">Table User</a></li>
 @endsection
 {{-- end menu title --}}
 
@@ -101,16 +102,20 @@
        
            @foreach ($data as $index => $item)
              <tr>
+               
                <td>{{$index+1}} </td>
                <td>{{($item->wo)}}</td>
                <td><a href="#" id="open_row_{{$item->id}}" class="open_row">{{$item->nama_calang}}</a></td>
                @if ($jenis_halaman != "5" && $jenis_halaman != "6" && $jenis_halaman != "7")
                  <td>
                  @php
+                 // halaman 3 tapi belum di accept
                   if($jenis_halaman == "3" && $item->status == "2"){
                     $date_used = 0;
                     $date_all = 0;
                   }else{
+                  // halaman 3
+                  
                     $date_used = getDiffTwoDate($item->last_update,$now);
                     $date_all = getDiffTwoDate($item->last_update,$item->target_selesai);
                   }
@@ -123,16 +128,15 @@
                     }catch(Exception $e){
                       $hasil_date = 0;
                     }
-                    
+
                  @endphp
                  <div class="progress">
-             <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: {{$hasil_date}}%">
-             <div style="width:20px;color:#808080"><span >&nbsp;{{$hasil_date}}%</span></div>
-         </div>
-         </div>
-               </td>
-               @endif
-               
+                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: {{$hasil_date}}%">
+                <div style="width:20px;color:#808080"><span >&nbsp;{{$hasil_date}}%</span></div>
+                  </div>
+                  </div>
+                </td>
+               @endif      
                <td>{{$m_kategory_order->KategoriById($item->id_categori_order)[0]->deskripsi}}</td>
                @if($jenis_halaman == '7' && $item->id_categori_order == "5")
                 <td>CLOSED</td>
@@ -215,7 +219,8 @@
                                @endif
                             class="accept_kons btn btn-block btn-primary btn-xs">ACCEPT</button></td>
                            
-                           <td><button id="done_kons_{{$item->id}}" type="button"  data-toggle="modal" data-target="#modal-done" class="done_kons accept btn btn-block btn-success btn-xs" 
+                           <td> 
+                            <button id="done_kons_{{$item->id}}" type="button"  data-toggle="modal" data-target="#modal-done" class="done_kons accept btn btn-block btn-success btn-xs" 
                               @if ($item->status == "21")
                               style="display:block"
                               @else
@@ -320,61 +325,61 @@
                   </td>
              </tr>
              <tr>
-             <td colspan="9" class="subrow" id="subrow_{{$item->id}}" style="background:#008000;display:none">
-               <table class="table_expand table table-hover text-nowrap">
-                 <thead>
-                   <tr>
-                     <th>ORDER ID</th>
-                     <th>NAMA CALANG</th>
-                     <th>LATITUDE</th>
-                     <th>LONGITUDE</th>
-                     <th>ALAMAT</th>
-                     <th>NAMA ODP</th>
-                     <th>INPUTER</th>
-                     @if($jenis_halaman == '3')
-                     <th>Nama Mitra</th>
-                     @endif
-                     <th>TGL CREATE</th>
-                     <th>KATEGORI</th>
-                     <th>STATUS</th>
-                   </tr>
-                 </thead>
-                 <tbody>
-                     <tr>
-                       <td>{{($item->wo)}}</td>
-                       <td>{{$item->nama_calang}}</td>
-                       <td>{{$item->lat}}</td>
-                       <td>{{$item->long}}</td>
-                       <td>{{$item->alamat}}</td>
-                       <td>{{$item->nama_odp}}</td>
-                       <td>
-                         @if($item->inputer != NULL)
-                         {{$m_user->getUserFromId($item->inputer)['nama']}}
-                         @endif
-                       </td>
-                        @if($jenis_halaman == '3')
-                           <td>{{$m_mitra->getMitra($item->id_mitra)[0]->nama_mitra}}</td>
-                         @endif
-                       <td>{{$item->create_dtm}}</td>
-                       <td>{{$m_kategory_order->KategoriById($item->id_categori_order)[0]->deskripsi}}</td>
-                       @if($jenis_halaman == '7' && $item->id_categori_order == "5")
-                        <td>CLOSED</td>
-                       @elseif($jenis_halaman == '7' && $item->id_categori_order != "5")    
-                         <td>GO LIVE</td>
-                       @else
-                       <td>
-                         @if($item->status != null)
-                          {{$m_status_order->getStatusOrderFromId($item->status)}}
-                         @endif
-                           -
-                       </td>    
-                       @endif
-                       
-                      
-                     </tr>  
-                 </tbody>
-               </table>
-             </td>
+              <td colspan="9" class="subrow" id="subrow_{{$item->id}}" style="background:#008000;display:none">
+                <table class="table_expand table table-hover text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>ORDER ID</th>
+                      <th>NAMA CALANG</th>
+                      <th>LATITUDE</th>
+                      <th>LONGITUDE</th>
+                      <th>ALAMAT</th>
+                      <th>NAMA ODP</th>
+                      <th>INPUTER</th>
+                      @if($jenis_halaman == '3')
+                      <th>Nama Mitra</th>
+                      @endif
+                      <th>TGL CREATE</th>
+                      <th>KATEGORI</th>
+                      <th>STATUS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                        <td>{{($item->wo)}}</td>
+                        <td>{{$item->nama_calang}}</td>
+                        <td>{{$item->lat}}</td>
+                        <td>{{$item->long}}</td>
+                        <td>{{$item->alamat}}</td>
+                        <td>{{$item->nama_odp}}</td>
+                        <td>
+                          @if($item->inputer != NULL)
+                          {{$m_user->getUserFromId($item->inputer)['nama']}}
+                          @endif
+                        </td>
+                          @if($jenis_halaman == '3')
+                            <td>{{$m_mitra->getMitra($item->id_mitra)[0]->nama_mitra}}</td>
+                          @endif
+                        <td>{{$item->create_dtm}}</td>
+                        <td>{{$m_kategory_order->KategoriById($item->id_categori_order)[0]->deskripsi}}</td>
+                        @if($jenis_halaman == '7' && $item->id_categori_order == "5")
+                          <td>CLOSED</td>
+                        @elseif($jenis_halaman == '7' && $item->id_categori_order != "5")    
+                          <td>GO LIVE</td>
+                        @else
+                        <td>
+                          @if($item->status != null)
+                            {{$m_status_order->getStatusOrderFromId($item->status)}}
+                          @endif
+                            -
+                        </td>    
+                        @endif
+                        
+                        
+                      </tr>  
+                  </tbody>
+                </table>
+              </td>
              </tr>
            @endforeach   
          </tbody>
@@ -403,6 +408,7 @@
             
             <input type="hidden"  id="id_done" name="id_done" />
             <input type="hidden"  id="type_done" name="type_done" />
+            <input type="hidden"  id="time_done" name="time_done" />
           </div>
           <div class="modal-footer justify-content-between">
           

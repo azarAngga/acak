@@ -7,6 +7,8 @@ $design_tiket = $m_orders->table(1,1,1,null,null);
 $assign_tiket = $m_orders->table(2,1,1,null,null); 
 $konstruksi_tiket = $m_orders->table(3,1,1,null,null); 
 $golive_tiket = $m_orders->table(4,1,1,null,null); 
+
+$data_point = $m_orders->getPoint();
 ?>
 @extends('admin_template')
 
@@ -76,7 +78,62 @@ $golive_tiket = $m_orders->table(4,1,1,null,null);
 </div>
 <!-- /.col-lg-3 col-md-3 col-sm-6 col-xs-12 -->
 
-    
+
+<div class="col-md-12">
+    <div class="panel">
+       
+        <div class="panel-body">
+          <h4>Performansi </h4>
+          <hr/>
+          <table class="table table-hover text-nowrap" >
+           <thead>
+             <tr>
+               <th>NO</th>
+               <th >MITRA</th>
+               <th >POINT PRODUKTIF</th>
+             </tr>
+           </thead>
+           <tbody>
+            @foreach ($data_point as $index => $i)
+            
+                <tr>
+                    <td>
+                        {{$index+1}}
+                    </td>
+                        <td><a href="#" id="open_row_{{$i['id']}}" class="open_row">{{$i["nama_mitra"]}}</a></td>
+                    
+                    <td>
+                        {{$i['point']}}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3"   id="subrow_{{$i['id']}}" class="subrow"  style="background:#008000;display:none">
+                      <table class="table_expand table table-hover text-nowrap">
+                        <thead>
+                          <tr>
+                            <th>Nama Mitra</th>
+                            <th>Alamat</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>{{$i['nama_mitra']}}</a></td>
+                              <td>{{$i["alamat"]}}</td>
+                            </tr>  
+                            
+                        </tbody>
+                      </table>
+                    </td>
+                </tr>
+
+            @endforeach
+           </tbody>
+          </table>
+        </div>
+    </div>
+  </div>
+  <!-- /.col-md-6 -->
+  
 @endsection
 {{-- end content --}}
 

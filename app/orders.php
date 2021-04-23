@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 use Carbon\Carbon;
 use App\DateTime;
+use App\mitra;
 class orders extends Model
 {
     //
@@ -268,6 +269,31 @@ class orders extends Model
        ->where('status',$id_status_order)
        ->count();
     }
+
+    public function getPoint(){
+       $mitra =  mitra::select('*')->get();
+        $arr = array();
+       foreach($mitra as $d){
+           $id = $d->id_mitra;
+           $nama_mitra = $d->nama_mitra;
+           $alamat = $d->alamat;
+            $sum = DB::table("orders")
+            ->where('id_mitra',"=","$id")
+            ->get()
+            ->sum("point");
+
+            $object["id"] = $id;
+            $object["point"] = $sum;
+            $object["id_mitra"] = $id;
+            $object["nama_mitra"] = $nama_mitra;
+            $object["alamat"] = $alamat;
+
+            $arr[] = $object;
+
+       }
+
+       return $arr;
+     }
 
     public function getAverage($id_mitra,$id_status_order){
         $order_mitra = orders::select('*')

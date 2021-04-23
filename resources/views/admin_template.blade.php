@@ -176,6 +176,9 @@ use App\role_user;
                                         <span class="">Menu</span>
                                     </li>
                                     <li>
+                                      <a href="{{url('/home')}}"><i class="fa fa-dashboard"></i> <span>HOME</span></a>
+                                  </li>
+                                    <li>
                                         <a href="{{url('/inputer')}}"><i class="fa fa-dashboard"></i> <span>INPUT</span></a>
                                     </li>
                                     <li class="has-children">
@@ -1418,9 +1421,11 @@ use App\role_user;
                
                  var atribut = $(this).attr('id');
                  var id = atribut.replace('done_kons_','')
+                 var time = atribut.replace('time_done_','')
                  
                  $('#id_done').val(id)
                  $('#type_done').val('2')
+                 $('#time_done').val(time)
       
             })
       
@@ -1652,6 +1657,7 @@ use App\role_user;
                
                   
             })
+
       
             $('.subrow').click(function(){ 
                   $('.subrow').hide();
